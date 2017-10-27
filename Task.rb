@@ -30,6 +30,29 @@ class Task_list
     end
   end
 
+  # incomplete_sorted_by_date
+  def sort_task_by_due_date
+    tempArray= []
+    no_duedate = []
+    for i in @incomplete_tasks
+      if i.respond_to?(:show_due_date)
+        tempArray << i
+      else
+        no_duedate << i
+      end
+    end
+    tempArray.sort_by {|task| task.show_due_date}
+    p @incomplete_tasks = tempArray + no_duedate
+  end
+
+  def show_task_due_today
+    for i in @incomplete_tasks
+      if i.show_due_date == Date.today
+        p i
+      end
+    end
+  end
+
   def complete_tasks
     @complete_tasks
   end
@@ -74,9 +97,9 @@ class Task
 end
 
 class DueDateTask < Task
-  def initialize(due_date=Date.today+7 )
+  def initialize(name, status, due_date=Date.today+7 )
     @due_date = due_date
-    super
+    super(name, status)
   end
 
   def show_due_date
@@ -84,9 +107,9 @@ class DueDateTask < Task
   end
 
   def to_s
-    @name
-    @describe
-    @status
-    @due_date
+    p "name: #{@name}, status: #{@status}, due date: #{@due_date}"
   end
 end
+
+
+DueDateTask.new("Monday", "done")
